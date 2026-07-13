@@ -13,10 +13,29 @@ class EmailService {
             this.mailgun = mg.client({
                 username: 'api',
                 key: process.env.MAILGUN_API_KEY,
+                // EU-region accounts/domains MUST use the EU endpoint, otherwise
+                // every request fails with 401. Set MAILGUN_API_URL=https://api.eu.mailgun.net
+                // in your env if your domain lives in the EU region.
+                url: process.env.MAILGUN_API_URL || 'https://api.mailgun.net',
             });
-            logger.info('Mailgun email service initialized');
+            logger.info(`Mailgun email service initialized (domain: ${this.domain})`);
         } else {
             logger.warn('Mailgun credentials not found. Email functionality will be limited.');
+        }
+    }
+
+    /**
+     * Log the real Mailgun error. The mailgun.js SDK surfaces failures on
+     * error.status / error.details (NOT error.response), so those must be
+     * read explicitly or the underlying cause is silently swallowed.
+     */
+    logMailgunError(context, error) {
+        logger.error(`${context}:`, error?.message || error);
+        if (error?.status) {
+            logger.error('Mailgun status code:', error.status);
+        }
+        if (error?.details) {
+            logger.error('Mailgun error details:', error.details);
         }
     }
 
@@ -48,18 +67,7 @@ class EmailService {
             logger.info(`Password reset email sent to: ${email}`, { messageId: response.id });
             return { success: true, message: 'Password reset email sent successfully' };
         } catch (error) {
-            logger.error('Mailgun email error:', error);
-
-            // Handle specific Mailgun errors
-            if (error.response) {
-                logger.error('Mailgun error response status:', error.response.status);
-                logger.error('Mailgun error response body:', error.response.body);
-            }
-
-            if (error.message) {
-                logger.error('Mailgun error message:', error.message);
-            }
-
+            this.logMailgunError('Mailgun password reset email error', error);
             throw new Error('Failed to send password reset email. Please try again later.');
         }
     }
@@ -277,7 +285,7 @@ The Scribo Team
             logger.info(`Password reset confirmation email sent to: ${email}`, { messageId: response.id });
             return { success: true };
         } catch (error) {
-            logger.error('Failed to send confirmation email:', error);
+            this.logMailgunError('Failed to send confirmation email', error);
             // Don't throw error for confirmation email - it's not critical
             return { success: false };
         }
@@ -311,17 +319,7 @@ The Scribo Team
             logger.info(`Email verification sent to: ${email}`, { messageId: response.id });
             return { success: true, message: 'Verification email sent successfully' };
         } catch (error) {
-            logger.error('Mailgun email error:', error);
-
-            if (error.response) {
-                logger.error('Mailgun error response status:', error.response.status);
-                logger.error('Mailgun error response body:', error.response.body);
-            }
-
-            if (error.message) {
-                logger.error('Mailgun error message:', error.message);
-            }
-
+            this.logMailgunError('Mailgun verification email error', error);
             throw new Error('Failed to send verification email. Please try again later.');
         }
     }
@@ -561,7 +559,7 @@ The Scribo Team
             logger.info(`Welcome email sent to: ${email}`, { messageId: response.id });
             return { success: true };
         } catch (error) {
-            logger.error('Failed to send welcome email:', error);
+            this.logMailgunError('Failed to send welcome email', error);
             // Don't throw error for welcome email - it's not critical
             return { success: false };
         }

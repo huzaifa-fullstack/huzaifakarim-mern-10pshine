@@ -41,7 +41,7 @@
 ![MIT License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 ![Project Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
 
-🌐 **Live Demo:** Coming Soon!
+🌐 **Live Demo:** [https://www.scribonotes.tech](https://www.scribonotes.tech)
 
 ---
 
@@ -130,6 +130,62 @@ Key highlights include:
 - **Loading States** - Skeleton screens and spinners
 - **Accessibility** - WCAG 2.1 compliant
 - **Radix UI Components** - High-quality, accessible primitives
+
+---
+
+## 📸 Screenshots
+
+### 🔐 **Login Page**
+
+![Login Page](screenshots/login.png)
+
+---
+
+### 📝 **Register Page**
+
+![Register Page](screenshots/register.png)
+
+---
+
+### 🏠 **Dashboard**
+
+![Dashboard](screenshots/dashboard.png)
+
+---
+
+### ✍️ **Note Editor**
+
+![Note Editor](screenshots/editor.png)
+
+---
+
+### 🤖 **AI Features**
+
+![AI Features](screenshots/ai-features.png)
+
+---
+
+### 👤 **Profile Page**
+
+![Profile Page](screenshots/profile.png)
+
+---
+
+### ⚙️ **Settings**
+
+![Settings](screenshots/settings.png)
+
+---
+
+### 🗑️ **Recycle Bin**
+
+![Recycle Bin](screenshots/recycle-bin.png)
+
+---
+
+## 🎥 Preview
+
+![Preview GIF](screenshots/gif/preview.gif)
 
 ---
 
